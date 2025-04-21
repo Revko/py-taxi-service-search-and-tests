@@ -6,6 +6,19 @@ from django.core.exceptions import ValidationError
 from taxi.models import Car, Driver
 
 
+def validate_license_number(
+    license_number,
+):  # regex validation is also possible here
+    if len(license_number) != 8:
+        raise ValidationError("License number should consist of 8 characters")
+    elif not license_number[:3].isupper() or not license_number[:3].isalpha():
+        raise ValidationError("First 3 characters should be uppercase letters")
+    elif not license_number[3:].isdigit():
+        raise ValidationError("Last 5 characters should be digits")
+
+    return license_number
+
+
 class CarForm(forms.ModelForm):
     drivers = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
@@ -53,19 +66,6 @@ class DriverSearchForm(forms.Form):
                 "placeholder": "username"}
         ),
     )
-
-
-def validate_license_number(
-    license_number,
-):  # regex validation is also possible here
-    if len(license_number) != 8:
-        raise ValidationError("License number should consist of 8 characters")
-    elif not license_number[:3].isupper() or not license_number[:3].isalpha():
-        raise ValidationError("First 3 characters should be uppercase letters")
-    elif not license_number[3:].isdigit():
-        raise ValidationError("Last 5 characters should be digits")
-
-    return license_number
 
 
 class DriverLicenseUpdateForm(forms.ModelForm):
