@@ -55,15 +55,6 @@ class DriverSearchForm(forms.Form):
     )
 
 
-class DriverLicenseUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Driver
-        fields = ["license_number"]
-
-    def clean_license_number(self):
-        return validate_license_number(self.cleaned_data["license_number"])
-
-
 def validate_license_number(
     license_number,
 ):  # regex validation is also possible here
@@ -75,6 +66,15 @@ def validate_license_number(
         raise ValidationError("Last 5 characters should be digits")
 
     return license_number
+
+
+class DriverLicenseUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = ["license_number"]
+
+    def clean_license_number(self):
+        return validate_license_number(self.cleaned_data["license_number"])
 
 
 class ManufacturerSearchForm(forms.Form):
